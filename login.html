@@ -2,15 +2,17 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Loginl</title>
+        <title>Login</title>
+        <link rel="stylesheet" type="text/css" href="/css/loginStyle.css">
 	</head>
 	<body>
 		<div class="login-form">
-			<h1>Login Form</h1>
-			<form action="auth" method="POST">
-				<input type="text" name="username" placeholder="Username" required>
-				<input type="password" name="password" placeholder="Password" required>
-				<input type="submit">
+			
+			<form action="auth" method="POST" class ="box">
+                <h1>Login</h1>
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <input type="submit" name="" value="Login">
 			</form>
 		</div>
 	</body>

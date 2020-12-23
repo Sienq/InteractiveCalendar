@@ -3,6 +3,7 @@ var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var path = require('path');
+var bcrypt = require("bcrypt")
 
 
 var connection = mysql.createConnection({
@@ -11,7 +12,6 @@ var connection = mysql.createConnection({
     password: 'skorpion67',
     database : 'Calendar'
 });
-
 var app = express();
 
 app.use(session({
@@ -24,6 +24,8 @@ app.use(bodyParser.urlencoded({extended : true}));
 
 app.use(bodyParser.json())
 
+app.use(express.static("public"))
+
 app.get('/', function (req, res)
 {
     res.sendFile(path.join(__dirname + '/login.html'));
@@ -33,7 +35,7 @@ app.get('/', function (req, res)
 app.post('/auth', function(req, res) {
     var username = req.body.username;
     var password = req.body.password;
-
+ 
     if(username && password){
         connection.query('SELECT * FROM users WHERE username = ? AND pass = ?',[username,password], function(error,results){
             if(results.length > 0){
