@@ -76,3 +76,9 @@ body
     background : #1abc9c;
     border : 2px solid #1abc9c;
 }
+
+.box input[name="Register"]:hover
+{
+    background: #f1c40f;
+    border : 2px solid #f1c40f;
+}

@@ -55,11 +55,11 @@ app.post('/auth', function(req, res) {
 
 app.get('/home',function(req, res){
     if(req.session.loggedin){
-        res.send('Welcome ' + req.session.username);
+        res.sendFile(path.join(__dirname + '/home.html'));
     }else{
         res.send("LOGIN TO VIEW THIS PAGE");
     }
-    res.end();
+    // res.end();
 });
 
 app.listen(3000)

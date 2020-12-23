@@ -1,0 +1,18 @@
+
+
+CREATE DATABASE IF NOT EXISTS Calendar DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE Calendar;
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT(11) NOT NULL,
+  username VARCHAR(50) NOT NULL,
+  pass VARCHAR(255) NOT NULL,
+  email VARCHAR(100) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+INSERT INTO users (id, username, pass, email) VALUES (1, 'test', 'test', 'test@test.com');
+ALTER TABLE users ADD PRIMARY KEY (id);
+ALTER TABLE users MODIFY id int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+
+
