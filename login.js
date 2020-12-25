@@ -62,4 +62,9 @@ app.get('/home',function(req, res){
     // res.end();
 });
 
+app.post('/register',function(req, res){
+    res.sendFile(path.join(__dirname + '/register.html'));
+});
+
+
 app.listen(3000)
