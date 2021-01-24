@@ -13,6 +13,8 @@ var connection = mysql.createConnection({
     database : 'Calendar'
 });
 var app = express();
+app.set('view engine','ejs')
+
 
 app.use(session({
     secret : 'secret',
@@ -26,11 +28,12 @@ app.use(bodyParser.json())
 
 app.use(express.static("public"))
 
+ 
+
 app.get('/', function (req, res)
 {
-    res.sendFile(path.join(__dirname + '/login.html'));
+    res.render(path.join(__dirname + '/login.ejs'));
 });
-
 
 app.post('/auth', function(req, res) {
     var username = req.body.username;
@@ -55,16 +58,55 @@ app.post('/auth', function(req, res) {
 
 app.get('/home',function(req, res){
     if(req.session.loggedin){
-        res.sendFile(path.join(__dirname + '/home.html'));
+        function date_set()
+        {
+            const date = new Date();
+            const months = 
+            [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December"
+            ];
+
+            console.log(date);
+            return months[date.getMonth()];
+        }
+
+        res.render(path.join(__dirname + '/home.ejs'),{month : date_set()});
+        
     }else{
         res.send("LOGIN TO VIEW THIS PAGE");
     }
     // res.end();
 });
 
+app.get('/register',function(req, res){
+    res.render(path.join(__dirname + '/register.ejs'));
+});
+
 app.post('/register',function(req, res){
-    res.sendFile(path.join(__dirname + '/register.html'));
+    var email = req.body.email;
+    var username = req.body.username;
+    var password = req.body.password;
+        connection.query('INSERT INTO users (username,pass,email) VALUES (?,?,?)',[username,password,email],function(error,results)
+        {
+            if(!error)
+            {
+                console.log("inserted "+ email + " " + username + " " + password);
+                res.redirect("/")
+            }
+
+        });
 });
 
 
-app.listen(3000)
+app.listen(3000)    

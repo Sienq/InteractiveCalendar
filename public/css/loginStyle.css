@@ -20,6 +20,8 @@ body
     box-shadow : 20px 20px 30px black;
 }
 
+
+
 .box input[type = "text"],.box input[type = "password"]
 {
     border : 0;
@@ -80,5 +82,5 @@ body
 .box input[name="Register"]:hover
 {
     background: #f1c40f;
-    border : 2px solid #f1c40f;
+    border : 2px solid #f1c40f;;
 }
