@@ -13,12 +13,14 @@
     <div class = "container">
         <div class= "calendar">
             <div class="month">
+                <div onclick="prevFunc()">
                 <i class="fas fa-angle-left prev"></i>
+                </div>
                     <div class="date">
                         <h1><%-month%></h1>
                         <p>Fri May 29,2020</p>
                     </div>
-                    <div onclick="<%-next%>">
+                    <div onclick="nextFunc()">
                 <i class="fas fa-angle-right next"></i>
                     </div>
             </div>
@@ -47,6 +49,15 @@
             </div>
         </div>
     </div>
-    
+    <script>
+        function nextFunc()
+        {
+            window.location.href = "./home?currMonth="+"<%-month%>"+"&side=1"
+        }
+        function prevFunc()
+        {
+            window.location.href = "./home?currMonth="+"<%-month%>"+"&side=0"
+        }
+    </script>
 </body>
 </html>

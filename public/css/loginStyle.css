@@ -22,7 +22,7 @@ body
 
 
 
-.box input[type = "text"],.box input[type = "password"]
+.box input[type = "text"],.box input[type = "password"],.box input[name = "Register"]
 {
     border : 0;
     background : none;
@@ -51,7 +51,7 @@ body
     text-transform: uppercase;
 }
 
-.box input[type = "submit"]
+.box input[type = "submit"],.box input[name = "Register"]
 {
     border : 0;
     background : none;

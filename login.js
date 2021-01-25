@@ -58,7 +58,10 @@ app.post('/auth', function(req, res) {
 
 app.get('/home',function(req, res){
     if(req.session.loggedin){
+
+
         
+
         var date = new Date();
         const months = 
         [
@@ -75,6 +78,18 @@ app.get('/home',function(req, res){
             "November",
             "December"
         ];
+        function next()
+        {
+            console.log("SIEMA KLIKLEM NEXT");
+            var monthindex = months.findIndex(month => month == req.query.currMonth);
+            if(req.query.side == 0) monthindex-=1;
+            else monthindex+=1;
+            date.setMonth(monthindex);
+        }
+
+        if(req.query.currMonth != undefined)next();
+
+
         var month = months[date.getMonth()];
         var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
         var prevlastDay = new Date(date.getFullYear(), date.getMonth(), 0).getDate();
@@ -82,66 +97,7 @@ app.get('/home',function(req, res){
         var getFirstDay = date.getDay() - 1; 
         var getLastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDay();
 
-        function next()
-        {
-            console.log("SIEMA KLIKLEM NEXT");
-            date.setMonth(date.getMonth() + 1);
-        }
-
-        // function renderCal()
-        // {
-            
-
-        //     function month_get()
-        //     {
-        //         const months = 
-        //         [
-        //             "January",
-        //             "February",
-        //             "March",
-        //             "April",
-        //             "May",
-        //             "June",
-        //             "July",
-        //             "August",
-        //             "September",
-        //             "October",
-        //             "November",
-        //             "December"
-        //         ];
-
-        //         return months[date.getMonth()];
-        //     }
-
-        //     function get_last_day()
-        //     {
-                
-        //         return lastDay;
-        //     }
-            
-        //     function get_prev_last_day()
-        //     {
-        //         var lastDay = new Date(date.getFullYear(), date.getMonth(), 0).getDate();
-        //         console.log(lastDay);
-        //         return lastDay;
-        //     }
-
-        //     function get_first_day()
-        //     {
-        //         date.setDate(1);
-        //         return date.getDay() - 1; 
-        //         //! TO MOZE WSZYSTKO PSUC, POZNIEJ ZMIENIE JAK BEDZIE ZLE
-        //     }
-
-        //     function get_last_day_index()
-        //     {
-
-        //         var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDay();
-        //         return lastDay;
-        //     }
-
-        // }
-
+        
 
 
 
@@ -158,7 +114,6 @@ app.get('/home',function(req, res){
     }else{
         res.send("LOGIN TO VIEW THIS PAGE");
     }
-    // res.end();
 });
 
 app.get('/register',function(req, res){
