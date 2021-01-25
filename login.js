@@ -58,30 +58,102 @@ app.post('/auth', function(req, res) {
 
 app.get('/home',function(req, res){
     if(req.session.loggedin){
-        function date_set()
-        {
-            const date = new Date();
-            const months = 
-            [
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December"
-            ];
+        
+        var date = new Date();
+        const months = 
+        [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ];
+        var month = months[date.getMonth()];
+        var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+        var prevlastDay = new Date(date.getFullYear(), date.getMonth(), 0).getDate();
+        date.setDate(1);
+        var getFirstDay = date.getDay() - 1; 
+        var getLastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDay();
 
-            console.log(date);
-            return months[date.getMonth()];
+        function next()
+        {
+            console.log("SIEMA KLIKLEM NEXT");
+            date.setMonth(date.getMonth() + 1);
         }
 
-        res.render(path.join(__dirname + '/home.ejs'),{month : date_set()});
+        // function renderCal()
+        // {
+            
+
+        //     function month_get()
+        //     {
+        //         const months = 
+        //         [
+        //             "January",
+        //             "February",
+        //             "March",
+        //             "April",
+        //             "May",
+        //             "June",
+        //             "July",
+        //             "August",
+        //             "September",
+        //             "October",
+        //             "November",
+        //             "December"
+        //         ];
+
+        //         return months[date.getMonth()];
+        //     }
+
+        //     function get_last_day()
+        //     {
+                
+        //         return lastDay;
+        //     }
+            
+        //     function get_prev_last_day()
+        //     {
+        //         var lastDay = new Date(date.getFullYear(), date.getMonth(), 0).getDate();
+        //         console.log(lastDay);
+        //         return lastDay;
+        //     }
+
+        //     function get_first_day()
+        //     {
+        //         date.setDate(1);
+        //         return date.getDay() - 1; 
+        //         //! TO MOZE WSZYSTKO PSUC, POZNIEJ ZMIENIE JAK BEDZIE ZLE
+        //     }
+
+        //     function get_last_day_index()
+        //     {
+
+        //         var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDay();
+        //         return lastDay;
+        //     }
+
+        // }
+
+
+
+
+        res.render(path.join(__dirname + '/home.ejs'),{
+            date : date,
+            month : month,
+            lastDay : lastDay,
+            firstDayIndex : getFirstDay,
+            prevLastDay : prevlastDay,
+            lastDayIndex : getLastDay,
+            next : next
+          });
         
     }else{
         res.send("LOGIN TO VIEW THIS PAGE");
