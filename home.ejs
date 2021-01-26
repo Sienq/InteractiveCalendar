@@ -12,6 +12,18 @@
 <body>
     <div class = "container">
         <div class= "calendar">
+            <div id="overlay">
+                <div class="box">
+                    <form action="addtask" method="POST">
+                        <h1>Add Task</h1>
+                        <input type="text" name="taskName" placeholder="Task" required>
+                        <!-- <input type="text" name="Description" placeholder="Do something..." required> -->
+                        <textarea name="taskDescription" placeholder="Description" maxlength="300" rows="10" cols="30"></textarea>
+                        <input type="submit" name="" value="Add">
+                        <input type="submit" name="Cancel" value="Cancel" onclick="off()">
+                    </form>
+                </div>
+            </div>
             <div class="month">
                 <div onclick="prevFunc()">
                 <i class="fas fa-angle-left prev"></i>
@@ -35,16 +47,16 @@
             </div>
             <div class = "days">
                 <% for (var i =firstDayIndex; i>0 ;  i-- ) { %>
-                    <div class="prev-date"><%-prevLastDay-i + 1%></div>
+                    <div class="prev-date" onclick="myFunc(<%-prevLastDay-i + 1%>);on()"><%-prevLastDay-i + 1%></div>
                 <% } %>
                 <% for (var i =1; i <=lastDay;  i++ ) { %>
                         <%if(i === new Date().getDate() && date.getMonth() === new Date().getMonth()){%> 
-                            <div class="today"><%-i%></div>
+                            <div class="today" onclick="myFunc(<%-i%>);on()"><%-i%></div>
                         <% } else %>
-                            <div><%-i%></div> 
+                            <div onclick="myFunc(<%-i%>);on()"><%-i%></div> 
                 <% } %>
                 <% for (var i =1; i <=7-lastDayIndex - 1;  i++ ) { %>
-                    <div class="next-date"><%-i%></div>
+                    <div class="next-date" onclick="myFunc(<%-i%>);on()"><%-i%></div>
                 <% } %>
             </div>
         </div>
@@ -57,6 +69,19 @@
         function prevFunc()
         {
             window.location.href = "./home?currMonth="+"<%-month%>"+"&side=0"
+        }
+        function myFunc(i)
+        {
+            console.log(i); 
+        }
+        function on()
+        {
+            document.getElementById("overlay").style.display = "block";
+        }
+
+        function off()
+        {
+            document.getElementById("overlay").style.display = "none";
         }
     </script>
 </body>

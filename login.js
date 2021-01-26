@@ -135,5 +135,13 @@ app.post('/register',function(req, res){
         });
 });
 
+app.post('/addtask',function(req, res){
+    var taskName = req.body.taskName;
+    var description = req.body.taskDsc;
+    var monthindex = req.query.currMonth;
+    
+
+})
+
 
 app.listen(3000)    

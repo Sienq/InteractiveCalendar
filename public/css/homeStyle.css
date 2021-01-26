@@ -133,3 +133,90 @@ html
     background-color:teal;
     box-shadow : 5px 5px 20px black;
 }
+
+#overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+    transition : opacity 2s ease-out;
+  }
+
+.box
+{
+    width : 30%;
+    height : 60%;
+    padding : 40px;
+    position : absolute;
+    top : 50%;
+    left : 50%;
+    transform : translate(-50%, -50%);
+    background: #2c3e50 ;
+    text-align : center;
+    border-radius : 10px;
+    box-shadow : 20px 20px 30px black;
+}
+
+.box input[type=text],textarea
+{
+    border : 0;
+    background : none;
+    display : block;
+    margin : 20px auto;
+    text-align : center;
+    border : 2px solid #7f8c8d;
+    padding : 14px 10px;
+    width : 50%;
+    outline : none;
+    color : white;
+    border-radius: 20px;
+    transition : 0.4s;
+}
+
+.box input[type = "text"]:focus,textarea:focus
+{
+    width: 70%;
+    border-color: #3498db;
+    font-weight: 500;
+}
+
+.box h1
+{
+    color : white;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size : 30px;
+}
+
+.box input[type = "submit"]
+{
+    border : 0;
+    background : none;
+    margin : 20px auto;
+    text-align : center;
+    border : 2px solid #8e44ad;
+    padding : 14px 10px;
+    width : 100px;
+    outline : none;
+    color : white;
+    border-radius: 20px;
+    transition : 0.4s;
+}
+.box input[type = "submit"]:hover
+{
+    background : #1abc9c;
+    border : 2px solid #1abc9c;
+}
+
+.box input[name="Cancel"]:hover
+{
+    background: #e74c3c;
+    border : 2px solid #e74c3c;
+}
