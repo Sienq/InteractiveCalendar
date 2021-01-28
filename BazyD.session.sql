@@ -29,6 +29,10 @@ ALTER TABLE users MODIFY username VARCHAR(50) UNIQUE NOT NULL;
 ALTER TABLE users MODIFY pass VARCHAR(300) NOT NULL;
 ALTER TABLE tasks RENAME COLUMN taskDescritpion TO taskDesc;
 
+ALTER TABLE users ADD COLUMN username VARCHAR(50) NOT NULL;
+
+ALTER TABLE users DROP COLUMN username;
+
 SELECT taskName,taskDesc,taskDate FROM tasks WHERE username = "mail";
 
 SELECT EXISTS(SELECT username FROM users WHERE username = "mail");
