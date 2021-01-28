@@ -10,69 +10,96 @@
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,600;0,700;0,800;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
     </head>
 <body>
-    <div class = "container">
-        <div class= "calendar">
-            <div id="overlay">
-                <div class="box">
-                    <form action="addtask" method="POST">
-                        <h1>Add Task</h1>
-                        <input type="text" name="taskName" placeholder="Task" required>
-                        <!-- <input type="text" name="Description" placeholder="Do something..." required> -->
-                        <textarea name="taskDescription" placeholder="Description" maxlength="300" rows="10" cols="30"></textarea>
-                        <input type="submit" name="" value="Add">
-                        <input type="submit" name="Cancel" value="Cancel" onclick="off()">
-                    </form>
+    <div id="section1">
+        <button class="scrollDown" onclick="scrollME()">GO TO TASKS</button>
+        <div class = "container">
+            
+            
+            <div class= "calendar">
+                <div id="overlay">        
+                    <div class="box">
+                        <form name="taskForm" action="javascript:send_task()">
+                            <h1>Add Task</h1>
+                            <input type="text" name="taskName" placeholder="Task" required>
+                            <textarea name="taskDescription" placeholder="Description" maxlength="300" rows="10" cols="30"></textarea>
+                            <input type="submit" name="" onclick="off()" value="Add">
+                            <input type="submit" name="Cancel" value="Cancel" onclick="off()">
+                        </form>
+                    </div>
+                </div>
+                <div class="month">
+                    <div onclick="prevFunc()">
+                    <i class="fas fa-angle-left prev"></i>
+                    </div>
+                        <div class="date">
+                            <h1><%-month%></h1>
+                            
+                            <p>Fri May 29,2020</p>
+                        </div>
+                        <div onclick="nextFunc()">
+                    <i class="fas fa-angle-right next"></i>
+                        </div>
+                </div>
+                <div class = "weekdays">  
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                    <div>Sun</div>
+                </div>
+                <div class = "days">
+                    <% for (var i =firstDayIndex; i>0 ;  i-- ) { %>
+                        <div class="prev-date"><%-prevLastDay-i + 1%></div>
+                    <% } %>
+                    <% for (var i =1; i <=lastDay;  i++ ) { %>
+                            <%if(i === new Date().getDate() && date.getMonth() === new Date().getMonth()){%> 
+                                <div class="today" onclick="myFunc(<%-i%>);on();retMonth(<%month%>)"><%-i%></div>
+                            <% } else %>
+                                <div onclick="myFunc(<%-i%>);on();retMonth(<%month%>)"><%-i%></div> 
+                    <% } %>
+                    <% for (var i =1; i <=7-lastDayIndex - 1;  i++ ) { %>
+                        <div class="next-date"><%-i%></div>
+                    <% } %>
                 </div>
             </div>
-            <div class="month">
-                <div onclick="prevFunc()">
-                <i class="fas fa-angle-left prev"></i>
-                </div>
-                    <div class="date">
-                        <h1><%-month%></h1>
-                        <p>Fri May 29,2020</p>
-                    </div>
-                    <div onclick="nextFunc()">
-                <i class="fas fa-angle-right next"></i>
-                    </div>
-            </div>
-            <div class = "weekdays">  
-                <div>Mon</div>
-                <div>Tue</div>
-                <div>Wed</div>
-                <div>Thu</div>
-                <div>Fri</div>
-                <div>Sat</div>
-                <div>Sun</div>
-            </div>
-            <div class = "days">
-                <% for (var i =firstDayIndex; i>0 ;  i-- ) { %>
-                    <div class="prev-date" onclick="myFunc(<%-prevLastDay-i + 1%>);on()"><%-prevLastDay-i + 1%></div>
-                <% } %>
-                <% for (var i =1; i <=lastDay;  i++ ) { %>
-                        <%if(i === new Date().getDate() && date.getMonth() === new Date().getMonth()){%> 
-                            <div class="today" onclick="myFunc(<%-i%>);on()"><%-i%></div>
-                        <% } else %>
-                            <div onclick="myFunc(<%-i%>);on()"><%-i%></div> 
-                <% } %>
-                <% for (var i =1; i <=7-lastDayIndex - 1;  i++ ) { %>
-                    <div class="next-date" onclick="myFunc(<%-i%>);on()"><%-i%></div>
-                <% } %>
-            </div>
+            
         </div>
     </div>
+    
+    <div class="empty"></div>
+    <div id="section2">
+        <%for(var i = 0 ; i < numTasks ;i++) {%>
+        <div class=card>
+            <h1 class="text-tName"><%-tasks[i][0]%></h1>
+            <h1 class="text-tDate"><%-tasks[i][2]%></h1>
+            <h1 class="text-tDsc"><%-tasks[i][1]%></h1>
+        </div>
+        <%}%>
+        
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
+        var day;
+        var month;
         function nextFunc()
         {
-            window.location.href = "./home?currMonth="+"<%-month%>"+"&side=1"
+            window.location.href = "./home?currMonth="+"<%-month%>"+"&side=1";
         }
         function prevFunc()
         {
-            window.location.href = "./home?currMonth="+"<%-month%>"+"&side=0"
+            window.location.href = "./home?currMonth="+"<%-month%>"+"&side=0";
         }
         function myFunc(i)
         {
-            console.log(i); 
+            console.log();
+            day = i;
+        }
+        function retMonth(j)
+        {
+            month = j;
         }
         function on()
         {
@@ -82,6 +109,32 @@
         function off()
         {
             document.getElementById("overlay").style.display = "none";
+        }
+        function send_task()
+        {
+            var form = document.forms.taskForm;
+            axios.post(
+                "/addtask",
+                {
+                    taskName : form["taskName"].value,
+                    taskDescription : form["taskDescription"].value,
+                    day : day,
+                    year : "2021"
+                }
+            ).then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+            window.location.reload();
+        }
+
+        function scrollME()
+        {
+            console.log(document.body.scrollHeight);
+            window.scrollTo(0,2*document.body.scrollHeight);
+    
         }
     </script>
 </body>

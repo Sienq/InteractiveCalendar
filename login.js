@@ -3,8 +3,9 @@ var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var path = require('path');
-var bcrypt = require("bcrypt")
-
+var bcrypt = require("bcrypt");
+var flash = require("connect-flash");
+var util = require("util");
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -24,11 +25,11 @@ app.use(session({
 
 app.use(bodyParser.urlencoded({extended : true}));
 
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
-app.use(express.static("public"))
+app.use(express.static("public"));
 
- 
+app.use(flash());
 
 app.get('/', function (req, res)
 {
@@ -56,7 +57,7 @@ app.post('/auth', function(req, res) {
     }
 });
 
-app.get('/home',function(req, res){
+app.get('/home',async function(req, res){
     if(req.session.loggedin){
 
 
@@ -80,7 +81,6 @@ app.get('/home',function(req, res){
         ];
         function next()
         {
-            console.log("SIEMA KLIKLEM NEXT");
             var monthindex = months.findIndex(month => month == req.query.currMonth);
             if(req.query.side == 0) monthindex-=1;
             else monthindex+=1;
@@ -89,17 +89,30 @@ app.get('/home',function(req, res){
 
         if(req.query.currMonth != undefined)next();
 
-
         var month = months[date.getMonth()];
+        req.session.month = date.getMonth() + 1;
         var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
         var prevlastDay = new Date(date.getFullYear(), date.getMonth(), 0).getDate();
         date.setDate(1);
         var getFirstDay = date.getDay() - 1; 
         var getLastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDay();
 
-        
+        const AsyncQuery = util.promisify(connection.query).bind(connection);
 
 
+
+        const result = await AsyncQuery("SELECT COUNT (*) FROM tasks WHERE username = ?;",[req.session.username]);
+        var numTasks = result[0]['COUNT (*)'];
+
+        var tasks = [];
+        console.log(req.session.username);
+
+        const result2 = await AsyncQuery("SELECT taskName,taskDesc,taskDate FROM tasks WHERE username = ?;",[req.session.username]);
+        for(var i in result2)
+            {
+                
+                tasks.push([result2[i]['taskName'],result2[i]['taskDesc'],result2[i]['taskDate'].toLocaleDateString()]);
+            }
 
         res.render(path.join(__dirname + '/home.ejs'),{
             date : date,
@@ -108,7 +121,9 @@ app.get('/home',function(req, res){
             firstDayIndex : getFirstDay,
             prevLastDay : prevlastDay,
             lastDayIndex : getLastDay,
-            next : next
+            next : next,
+            tasks : tasks,
+            numTasks : numTasks
           });
         
     }else{
@@ -137,11 +152,28 @@ app.post('/register',function(req, res){
 
 app.post('/addtask',function(req, res){
     var taskName = req.body.taskName;
-    var description = req.body.taskDsc;
-    var monthindex = req.query.currMonth;
-    
+    var description = req.body.taskDescription;
+    // var month = parseInt(req.flash("month")) + 1;
+    var year = req.body.year;
+    var day = req.body.day;
+    console.log(req.session.username);
+    console.log(req.session.month);
+    console.log(taskName);
+    console.log(description);
+    console.log(year);
+    console.log(day);
+    connection.query('INSERT INTO tasks (username,taskName,taskDesc,taskDate) VALUES (?,?,?,DATE(?))',[req.session.username,taskName,description,year+'-'+req.session.month+'-'+day],
+    function(error,results){
+        if(!error)
+        {
+            console.log("inserted "+ req.session.username + " " + taskName + " " + description + " " + year +'-'+req.session.month+'-'+day);
+            res.redirect('back');
+            console.log("ej");
+        }
+        else console.log(error);  
+    });
 
-})
+});
 
 
-app.listen(3000)    
+app.listen(3000);

@@ -5,17 +5,42 @@
     box-sizing: border-box;
     font-family : Open Sans;
 }
-
+/* #3d0057 */
 html
 {
     font-size: 62.5%;
+    overflow-y: scroll;
+    height : 310%;
+    background-color:rgb(39, 11, 68);
+    background : linear-gradient(0deg,rgb(39, 11, 68),#34495e 55%);
+    scroll-behavior: smooth;
 }
+
+
+
+#section1
+{
+    height: 100%;
+}
+.empty
+{
+    position: static;
+    height: 1000px;
+}
+
+
+#section2
+{
+    height: 100%;
+}
+
+
+
 
 .container
 {
     width: 100%;
     height: 100vh;
-    background-color: #34495e; 
     color:black;
     display: flex;
     justify-content: center;
@@ -30,6 +55,7 @@ html
     box-shadow: 0.5rem;
     box-shadow : 20px 20px 30px black;
     border-radius : 10px;
+    left : 50%;
 }
 
 .month
@@ -220,3 +246,96 @@ html
     background: #e74c3c;
     border : 2px solid #e74c3c;
 }
+
+.scrollDown
+{
+    
+    top: 50px;
+    left : calc(50% - 100px);
+    border: 1px solid white;
+    background: none;
+    padding: 10px 20px;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 10px;
+    transition: 0.8s;
+    position: relative;
+    overflow: hidden;
+    color: white;
+    text-align : center;
+    
+    
+}
+
+
+ .scrollDown:before
+ {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    background: teal;
+    z-index: -1;
+    top: 0;
+    border-radius: 0 0 50% 50%;
+    transition: 0.8s;
+ } 
+
+
+  .scrollDown:hover:before{
+    height: 180%;
+  }
+
+  .card
+  {
+    margin : 15px;
+    width: 250px;
+    height: 350px;
+    box-shadow : 20px 20px 30px black;
+    border: double 4px transparent;
+    border-radius: 15px;
+    background-image: linear-gradient(0deg,#202d3a 1%,#34495e), radial-gradient(circle at top left, #743ad5,#d53a9d);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    transition : 1s;
+    display : inline-block;
+  }
+  .card:hover
+  {
+      width: 300px;
+      height:400px;
+      transition : 1s;
+  }
+
+  .text-tName,.text-tDsc,.text-tDate
+  {
+      margin-top: 10% ;
+      color:white;
+      text-transform: uppercase;
+      text-align: center;
+      
+  }
+
+  .text-tName
+  {
+    height: 10%;
+    font-weight: 1000;
+    background: linear-gradient(to right, #743ad5 0%, #d53a9d 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+  }
+
+  .text-tDsc
+  {
+    height : 80%;
+    font-weight: 200;
+    font-size : small;
+    transition: 2s;
+  }
+
+  .text-tDate
+  {
+    height: 10%;
+    font-weight: 800;
+  }
