@@ -4,8 +4,8 @@ body
     padding : 0;
     font-family : sans-serif;
     background : #34495e;
-
 }
+
 .box
 {
     width : 300px;
@@ -20,9 +20,7 @@ body
     box-shadow : 20px 20px 30px black;
 }
 
-
-
-.box input[type = "text"],.box input[type = "password"],.box input[name = "Register"]
+.box input[type = "text"],.box input[type = "password"], .box input[type="email"]
 {
     border : 0;
     background : none;
@@ -41,24 +39,24 @@ body
 .box input[type = "text"]:focus,.box input[type = "password"]:focus
 {
     width: 280px;
-    border-color: #8e44ad;
+    border-color: #1abc9c;
     font-weight: 500;
 }
 
 .box h1
 {
-    color : white;
+    color : #3498db;
     text-transform: uppercase;
 }
 
-.box input[type = "submit"],.box input[name = "Register"]
+.box input[type = "submit"]
 {
     border : 0;
     background : none;
     display : block;
     margin : 20px auto;
     text-align : center;
-    border : 2px solid #8e44ad;
+    border : 2px solid #3498db;
     padding : 14px 10px;
     width : 100px;
     outline : none;
@@ -67,26 +65,9 @@ body
     transition : 0.4s;
 }
 
-.box input[name = "newPass"],.box input[name = "delete"]
-{
-    border : 0;
-    background : none;
-    display : block;
-    margin : 20px auto;
-    text-align : center;
-    border : 2px solid #8e44ad;
-    padding : 5px 10px;
-    width : 150px;
-    outline : none;
-    color : white;
-    border-radius: 20px;
-    transition : 0.4s;
-}
-
-
 .box input[type = "submit"]:hover
 {
-    background : #8e44ad;
+    background : #3498db;
 }
 
 .box input[type = "submit"]:active
@@ -94,24 +75,6 @@ body
     transition : 0.1s;
     background : #1abc9c;
     border : 2px solid #1abc9c;
-}
-
-.box input[name="Register"]:hover
-{
-    background: #f1c40f;
-    border : 2px solid #f1c40f;;
-}
-
-.box input[name="newPass"]:hover
-{
-    background: #3498db;
-    border : 2px solid #3498db;;
-}
-
-.box input[name="delete"]:hover
-{
-    background: #e74c3c;
-    border : 2px solid #e74c3c;;
 }
 
 section .wave

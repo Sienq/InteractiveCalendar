@@ -7,6 +7,10 @@ var bcrypt = require("bcrypt");
 var flash = require("connect-flash");
 var util = require("util");
 
+
+const ROUNDS = 10;
+
+
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -15,6 +19,7 @@ var connection = mysql.createConnection({
 });
 var app = express();
 app.set('view engine','ejs')
+
 
 
 app.use(session({
@@ -36,23 +41,34 @@ app.get('/', function (req, res)
     res.render(path.join(__dirname + '/login.ejs'));
 });
 
-app.post('/auth', function(req, res) {
+const AsyncQuery = util.promisify(connection.query).bind(connection);
+
+app.post('/auth', async function(req, res) {
     var username = req.body.username;
     var password = req.body.password;
+
+
  
-    if(username && password){
-        connection.query('SELECT * FROM users WHERE username = ? AND pass = ?',[username,password], function(error,results){
-            if(results.length > 0){
-                req.session.loggedin = true;
-                req.session.username = username;
-                res.redirect('/home');
-            }else{
-                res.send("INVALID DATA");
-            }
-            res.end();
+    if(username && password)
+    {
+        connection.query('SELECT * FROM users WHERE username = ?',[username], function(error,results){
+            
+            bcrypt.compare(password,results[0]['pass']).then(function(result){
+                if(result)
+                {
+                    req.session.loggedin = true;
+                    req.session.username = username;
+                    res.redirect('/home');  
+                }
+                else
+                {
+                  res.send("INVALID DATA");  
+                }
+            });
         });
-    }else{
-        res.send("ENTER USERNAME AND PASSWORD");
+    }
+    else
+    {
         res.end();
     }
 });
@@ -97,7 +113,7 @@ app.get('/home',async function(req, res){
         var getFirstDay = date.getDay() - 1; 
         var getLastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDay();
 
-        const AsyncQuery = util.promisify(connection.query).bind(connection);
+        
 
 
 
@@ -135,25 +151,37 @@ app.get('/register',function(req, res){
     res.render(path.join(__dirname + '/register.ejs'));
 });
 
-app.post('/register',function(req, res){
+app.post('/register',async function(req, res){
     var email = req.body.email;
     var username = req.body.username;
     var password = req.body.password;
-        connection.query('INSERT INTO users (username,pass,email) VALUES (?,?,?)',[username,password,email],function(error,results)
-        {
-            if(!error)
-            {
-                console.log("inserted "+ email + " " + username + " " + password);
-                res.redirect("/")
-            }
-
+    const users = await AsyncQuery("SELECT EXISTS(SELECT username FROM users WHERE username = ?);",[username]);
+    if(users[0]['EXISTS(SELECT username FROM users WHERE username = \''+username+'\')'] == 0)
+    {
+        await bcrypt.hash(password, ROUNDS).then(function(hash) {
+            password = hash;
         });
+            connection.query('INSERT INTO users (username,pass,email) VALUES (?,?,?)',[username,password,email],function(error,results)
+            {
+                if(!error)
+                {
+                    console.log("inserted "+ email + " " + username + " " + password);
+                    res.redirect("/")
+                }
+                else console.log(error);
+
+            });
+    }
+    else
+    {
+        res.send("USERNAME ALREADY TAKEN");
+    }
+
 });
 
 app.post('/addtask',function(req, res){
     var taskName = req.body.taskName;
     var description = req.body.taskDescription;
-    // var month = parseInt(req.flash("month")) + 1;
     var year = req.body.year;
     var day = req.body.day;
     console.log(req.session.username);
@@ -174,6 +202,64 @@ app.post('/addtask',function(req, res){
     });
 
 });
+
+
+app.get('/newPass',function(req,res){
+    res.render(path.join(__dirname + '/password.ejs'));
+});
+
+app.post('/newPass',async function(req, res){
+    var username = req.body.username;
+    var oldP = req.body.oldPassword;
+    var newP = req.body.newPassword;
+
+    const result = await AsyncQuery("SELECT pass FROM users WHERE username = ?;",[username]);
+    bcrypt.compare(oldP,result[0]['pass']).then(async function(result){
+        if(result)
+        {
+            await bcrypt.hash(newP, ROUNDS).then(async function(hash) {
+                newP = hash;
+            });
+            console.log(newP);
+            const result2 = await AsyncQuery("UPDATE users SET pass = ? WHERE username = ?;",[newP,username]);
+            console.log("chyba poszlo");
+            res.redirect('/');
+        }
+        else
+        {
+            res.send("WRONG OLD PASSWORD");
+            res.end();
+        }
+    });
+    
+});
+
+app.get('/delete',function(req,res){
+    res.render(path.join(__dirname + '/delete.ejs'));
+});
+
+app.post('/delete',async function(req,res)
+{
+    var username = req.body.username;
+    var password = req.body.password;
+    const result = await AsyncQuery("SELECT pass FROM users WHERE username = ?;",[username]);
+    bcrypt.compare(password,result[0]['pass']).then(async function(result2){
+        if(result2)
+        {
+           const deleteUser = await AsyncQuery("DELETE FROM users WHERE username = ?;",[username]);
+           const deleteTasks = await AsyncQuery("DELETE FROM tasks WHERE username = ?;",[username]);
+           console.log("bangla");
+           res.redirect('/');
+        }
+        else
+        {
+            res.send("WRONG DATA");
+            res.end();
+        }
+    });
+});
+
+
 
 
 app.listen(3000);
