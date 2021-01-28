@@ -51,8 +51,15 @@ app.post('/auth', async function(req, res) {
  
     if(username && password)
     {
-        connection.query('SELECT * FROM users WHERE username = ?',[username], function(error,results){
-            
+        connection.query('SELECT username,pass FROM users WHERE username = ?',[username], function(error,results){
+ 
+            if(results.length < 1)
+            {
+                res.send("INVALID DATA")
+                res.end();
+            }
+            else
+            {
             bcrypt.compare(password,results[0]['pass']).then(function(result){
                 if(result)
                 {
@@ -65,6 +72,7 @@ app.post('/auth', async function(req, res) {
                   res.send("INVALID DATA");  
                 }
             });
+            }
         });
     }
     else
@@ -121,7 +129,6 @@ app.get('/home',async function(req, res){
         var numTasks = result[0]['COUNT (*)'];
 
         var tasks = [];
-        console.log(req.session.username);
 
         const result2 = await AsyncQuery("SELECT taskName,taskDesc,taskDate FROM tasks WHERE username = ?;",[req.session.username]);
         for(var i in result2)
@@ -184,19 +191,12 @@ app.post('/addtask',function(req, res){
     var description = req.body.taskDescription;
     var year = req.body.year;
     var day = req.body.day;
-    console.log(req.session.username);
-    console.log(req.session.month);
-    console.log(taskName);
-    console.log(description);
-    console.log(year);
-    console.log(day);
     connection.query('INSERT INTO tasks (username,taskName,taskDesc,taskDate) VALUES (?,?,?,DATE(?))',[req.session.username,taskName,description,year+'-'+req.session.month+'-'+day],
     function(error,results){
         if(!error)
         {
             console.log("inserted "+ req.session.username + " " + taskName + " " + description + " " + year +'-'+req.session.month+'-'+day);
             res.redirect('back');
-            console.log("ej");
         }
         else console.log(error);  
     });
@@ -220,9 +220,7 @@ app.post('/newPass',async function(req, res){
             await bcrypt.hash(newP, ROUNDS).then(async function(hash) {
                 newP = hash;
             });
-            console.log(newP);
             const result2 = await AsyncQuery("UPDATE users SET pass = ? WHERE username = ?;",[newP,username]);
-            console.log("chyba poszlo");
             res.redirect('/');
         }
         else
@@ -248,7 +246,6 @@ app.post('/delete',async function(req,res)
         {
            const deleteUser = await AsyncQuery("DELETE FROM users WHERE username = ?;",[username]);
            const deleteTasks = await AsyncQuery("DELETE FROM tasks WHERE username = ?;",[username]);
-           console.log("bangla");
            res.redirect('/');
         }
         else
@@ -259,7 +256,13 @@ app.post('/delete',async function(req,res)
     });
 });
 
-
+app.post('/deletetask',async function(req,res)
+{
+    var name = req.body.taskName;
+    const result = await AsyncQuery("DELETE FROM tasks WHERE username = ? AND taskName = ?",[req.session.username,name]);
+    console.log("no powinno sie usuwac to:"+name);
+    res.end();
+});
 
 
 app.listen(3000);

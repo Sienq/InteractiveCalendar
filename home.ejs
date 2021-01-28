@@ -70,9 +70,10 @@
     
     <div class="empty"></div>
     <div id="section2">
+        <button class="scrollUp" onclick="scrollMEUP()">GO TO CALENDAR</button>
         <%for(var i = 0 ; i < numTasks ;i++) {%>
-        <div class=card>
-            <h1 class="text-tName"><%-tasks[i][0]%></h1>
+        <div class=card id="<%-i%>" onclick="deleteTask(<%-i%>)">
+            <h1 class="text-tName" name="<%tasks[i][0]%> "><%-tasks[i][0]%></h1>
             <h1 class="text-tDate"><%-tasks[i][2]%></h1>
             <h1 class="text-tDsc"><%-tasks[i][1]%></h1>
         </div>
@@ -130,10 +131,38 @@
             window.location.reload();
         }
 
+        async function deleteTask(i)
+        {
+            
+            console.log("siema");
+            console.log(document.getElementsByClassName("text-tName")[i].innerHTML);
+            await axios.post(
+                "/deletetask",
+                {
+                    taskName : document.getElementsByClassName("text-tName")[i].innerHTML
+                }
+            ).then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+            
+            document.getElementById(i).outerHTML = "";
+            window.location.reload();
+
+        }
+
         function scrollME()
         {
             console.log(document.body.scrollHeight);
             window.scrollTo(0,2*document.body.scrollHeight);
+    
+        }
+        function scrollMEUP()
+        {
+            console.log(document.body.scrollHeight);
+            window.scrollTo(0,-2*document.body.scrollHeight);
     
         }
     </script>

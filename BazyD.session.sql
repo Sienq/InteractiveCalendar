@@ -38,3 +38,5 @@ SELECT taskName,taskDesc,taskDate FROM tasks WHERE username = "mail";
 SELECT EXISTS(SELECT username FROM users WHERE username = "mail");
 
 DROP TABLE users;
+
+DELETE FROM tasks WHERE username = "mail";
